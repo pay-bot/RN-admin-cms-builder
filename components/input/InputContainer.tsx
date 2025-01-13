@@ -1,8 +1,8 @@
+import clsxm from "@/utils/clsxm";
 import { type ReactElement } from "react";
 import { Control, Controller, FieldPath, FieldValues } from "react-hook-form";
-import { EyeIcon, EyeOffIcon } from "lucide-react-native";
-import clsxm from "@/utils/clsxm";
 import { TextInput, View } from "react-native";
+import BaseLabel from "../Base/BaseLabel";
 // import BaseHelper from "../Base/BaseHelper";
 // import BaseLabel from "../Base/BaseLabel";
 // import { Button } from "../ui/button";
@@ -50,16 +50,19 @@ const InputContainer = <T extends FieldValues>({
       control={control}
       render={({ field }) => (
         <View className="">
-          {/* {label && (
+          {label && (
             <BaseLabel
               value={label}
               className={clsxm(errors ? "text-[#D02B20]" : "")}
               required={required}
             />
-          )} */}
-          <View className="w-full h-16 px-4 bg-black-100 rounded-2xl border-2 border-black-200 focus:border-secondary flex flex-row items-center">
+          )}
+          <View className="">
             <TextInput
-              className={clsxm("", className)}
+              className={clsxm(
+                "w-full text-[0.875rem] font-[400] border rounded px-[10.44px] py-[9px] focus:!outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500",
+                className
+              )}
               placeholder={placeholder}
               onFocus={onFocus}
               disabled={disabled}

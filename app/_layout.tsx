@@ -21,6 +21,9 @@ import {
 } from "@tanstack/react-query";
 import { AppStateStatus, Platform } from "react-native";
 import Container, { Toast } from "toastify-react-native";
+import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
+import { clientPersister } from "@/state/clientPersister";
+
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
@@ -54,7 +57,10 @@ export default function RootLayout() {
   }
 
   return (
-    <QueryClientProvider client={queryClient}>
+    <PersistQueryClientProvider
+      client={queryClient}
+      persistOptions={{ persister: clientPersister }}
+    >
       <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
         <Container position="top" />
         <Stack>
@@ -67,6 +73,6 @@ export default function RootLayout() {
         </Stack>
         <StatusBar style="auto" />
       </ThemeProvider>
-    </QueryClientProvider>
+    </PersistQueryClientProvider>
   );
 }

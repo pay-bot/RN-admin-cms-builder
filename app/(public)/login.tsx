@@ -6,6 +6,7 @@ import { useForm } from "react-hook-form";
 
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Toast } from "toastify-react-native";
+import { store } from "@/store";
 console.log("API URL:", process.env.EXPO_PUBLIC_API_URL);
 
 export default function login() {
@@ -29,15 +30,24 @@ export default function login() {
         const { data } = res;
         if (data && res.status === 200) {
           console.log("🚀 ~ .then ~ data:", data);
+          store.dispatch({ type: "auth/setLoggin", payload: data });
+          store.dispatch({
+            type: "client/setActiveClient",
+            payload: data.user.client,
+          });
+          store.dispatch({
+            type: "content/setActiveSite",
+            payload: data.user.site,
+          });
+          store.dispatch({
+            type: "content/setActiveTemplate",
+            payload: data.templates[0]?.id,
+          });
         }
       })
       .catch((err) => {
         console.log(err.response);
       });
-  };
-
-  const showToasts = () => {
-    Toast.success("Promised is resolved");
   };
 
   return (
@@ -50,7 +60,6 @@ export default function login() {
       }}
       edges={["top"]}
     >
-      <Text className="bg-red-600">test</Text>
       <InputContainer control={control} name="email" label="Email" />
       <InputContainer control={control} name="password" label="Password" />
       <Button title="Submit" onPress={handleSubmit(onSubmit)} />
