@@ -13,7 +13,7 @@ export const reduxStorage: Storage = {
       storage.set(key, value);
       return Promise.resolve(true);
     }
-    return Promise.reject("Storage is unavailable on the server");
+    return Promise.reject("Storage is unavailable on the serddver");
   },
   getItem: (key) => {
     if (isClient && storage) {

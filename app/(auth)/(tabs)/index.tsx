@@ -1,12 +1,26 @@
-import { StyleSheet, Text, View } from "react-native";
 import React from "react";
+import authApi from "@/api/auth";
+import { store, useAppSelector } from "@/store";
+import { Button } from "react-native";
 
-const index = () => {
+export default function Index() {
+  const key = useAppSelector((state) => state.auth.key);
+  const handleLogout = () => {
+    const { signout } = authApi();
+    signout(key)
+      .then((res) => {
+        if (res.status === 200 || res.data) {
+          store.dispatch({ type: "auth/setLogout" });
+        }
+      })
+      .catch(() => {
+        // console.log(err.response);
+      });
+  };
   return (
-    <View>
-      <Text>index</Text>
-    </View>
+    <div>
+      {" "}
+      <Button title="logout" onPress={() => handleLogout()} />
+    </div>
   );
-};
-
-export default index;
+}

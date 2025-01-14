@@ -1,28 +1,13 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
+import { persistReducer, persistStore } from "redux-persist";
 import authReducer from "../features/auth/authSlice";
-import webBuilderReducer from "../features/builder/webBuilderSlice";
 import contentReducer from "../features/content/contentSlice";
-import layoutReducer from "../features/layout/layoutSlice";
-import modalReducer from "../features/modal/modalSlice";
-import drawerReducer from "../features/drawer/drawerSlice";
-import alertReducer from "../features/alert/alertSlice";
-import sidebarReducer from "../features/sidebar/sidebarSlice";
-import assetSelectionReducer from "../features/asset/assetSelectionSlice";
-import {
-  FLUSH,
-  PAUSE,
-  PERSIST,
-  persistReducer,
-  persistStore,
-  PURGE,
-  REGISTER,
-  REHYDRATE,
-} from "redux-persist";
 import { reduxStorage } from "./storage";
+import { clientStorage } from "@/state/clientPersister";
 
 const rootReducer = combineReducers({
   auth: authReducer,
-  // content: contentReducer,
+  content: contentReducer,
   // modal: modalReducer,
   // drawer: drawerReducer,
   // alert: alertReducer,
@@ -37,7 +22,7 @@ const persistConfig = {
   version: 1,
   storage: reduxStorage,
   timeout: 0,
-  whitelist: ["auth", "content"], // these reducers will persist data
+  whitelist: ["auth"], // these reducers will persist data
   // blacklist: ['exampleReducer'], // these reducers will not persist data
 };
 
@@ -47,9 +32,7 @@ export const store = configureStore({
   reducer: persistedReducer,
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
-      serializableCheck: {
-        ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
-      },
+      serializableCheck: false,
     }),
 });
 

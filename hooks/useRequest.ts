@@ -1,9 +1,7 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 // import Cookies from 'js-cookie';
 // import { useAppSelector } from "@/app";
-import { Storage } from "../state/cache";
-
-console.log("API URL:", process.env.EXPO_PUBLIC_API_URL);
+import { clientStorage } from "@/state/clientPersister";
 
 const client = axios.create({ baseURL: process.env.EXPO_PUBLIC_API_URL });
 
@@ -17,7 +15,7 @@ const useRequest = () => {
   const Responses = async (options: RequestOptions): Promise<AxiosResponse> => {
     // const token = Cookies.get('bzKey');
     client.defaults.headers.common.Authorization = `Token ${
-      options.token || Storage.getString("app.token")
+      options.token || clientStorage.getItem("key")
     }`;
     // client.defaults.headers.common.Authorization = `Token ${token || options.token || getKey}`;
 

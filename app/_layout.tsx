@@ -23,6 +23,10 @@ import { AppStateStatus, Platform } from "react-native";
 import Container, { Toast } from "toastify-react-native";
 import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
 import { clientPersister } from "@/state/clientPersister";
+import { store } from "@/store";
+import { Provider } from "react-redux";
+import { persistor } from "@/store/configureStore";
+import { PersistGate } from "redux-persist/integration/react";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -57,22 +61,31 @@ export default function RootLayout() {
   }
 
   return (
-    <PersistQueryClientProvider
-      client={queryClient}
-      persistOptions={{ persister: clientPersister }}
-    >
-      <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-        <Container position="top" />
-        <Stack>
-          <Stack.Screen name="(auth)/(tabs)" options={{ headerShown: false }} />
-          <Stack.Screen
-            name="(public)/login"
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen name="+not-found" />
-        </Stack>
-        <StatusBar style="auto" />
-      </ThemeProvider>
-    </PersistQueryClientProvider>
+    <Provider store={store}>
+      <PersistGate loading={null} persistor={persistor}>
+        <PersistQueryClientProvider
+          client={queryClient}
+          persistOptions={{ persister: clientPersister }}
+        >
+          <ThemeProvider
+            value={colorScheme === "dark" ? DarkTheme : DefaultTheme}
+          >
+            <Container position="top" />
+            <Stack>
+              <Stack.Screen
+                name="(auth)/(tabs)"
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="(public)/login"
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen name="+not-found" />
+            </Stack>
+            <StatusBar style="auto" />
+          </ThemeProvider>
+        </PersistQueryClientProvider>
+      </PersistGate>
+    </Provider>
   );
 }

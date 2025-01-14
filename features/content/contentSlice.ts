@@ -1,6 +1,6 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { reduxStorage } from "@/store/storage";
 import { TIdAndName } from "@/types";
-import { Storage } from "@/state/cache";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface ContentState {
   activeTemplate: string;
@@ -8,8 +8,8 @@ interface ContentState {
 }
 
 const initialState: ContentState = {
-  activeTemplate: Storage.getString("bzaTemplate") || "",
-  activeSite: Storage.getString("bzaSite") || "",
+  activeTemplate: reduxStorage.getItem("bzaTemplate") || "",
+  activeSite: reduxStorage.getItem("bzaSite") || "",
 };
 
 const contentSlice = createSlice({
@@ -24,20 +24,20 @@ const contentSlice = createSlice({
       }>
     ) => {
       const TemplateId = action.payload.templates[0]?.id;
-      Storage.set("bzaTemplate", TemplateId);
+      reduxStorage.setItem("bzaTemplate", TemplateId);
       if (!state.activeTemplate) state.activeTemplate = TemplateId;
       const SiteId = action.payload.id;
-      Storage.set("bzaSite", SiteId);
+      reduxStorage.setItem("bzaSite", SiteId);
       if (!state.activeSite) state.activeSite = SiteId;
     },
     setActiveTemplate: (state, action: PayloadAction<string>) => {
       const TemplateId = action.payload;
-      Storage.set("bzaTemplate", TemplateId);
+      reduxStorage.setItem("bzaTemplate", TemplateId);
       state.activeTemplate = TemplateId;
     },
     setActiveSite: (state, action: PayloadAction<string>) => {
       const SiteId = action.payload;
-      Storage.set("bzaSite", SiteId);
+      reduxStorage.setItem("bzaSite", SiteId);
       state.activeSite = SiteId;
     },
   },

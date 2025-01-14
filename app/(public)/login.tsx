@@ -6,10 +6,19 @@ import { useForm } from "react-hook-form";
 
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Toast } from "toastify-react-native";
-import { store } from "@/store";
-console.log("API URL:", process.env.EXPO_PUBLIC_API_URL);
+import { store, useAppSelector } from "@/store";
+import { Redirect, useNavigation } from "expo-router";
+import { ParamListBase } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
-export default function login() {
+export default function Login() {
+  const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
+  const auth = useAppSelector((state) => state.auth);
+  console.log("🚀 ~ Login ~ auth:", auth);
+  if (auth.isAuthenticated) {
+    return <Redirect href="/(auth)/(tabs)" />;
+  }
+
   const {
     handleSubmit,
     control,
@@ -43,6 +52,8 @@ export default function login() {
             type: "content/setActiveTemplate",
             payload: data.templates[0]?.id,
           });
+
+          navigation.navigate("index");
         }
       })
       .catch((err) => {

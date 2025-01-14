@@ -1,7 +1,6 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { Storage } from "@/state/cache";
-import { TIdAndName } from "@/types";
 import { reduxStorage } from "@/store/storage";
+import { TIdAndName } from "@/types";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 // Define more specific types for the client and user objects
 interface Client {
@@ -108,8 +107,8 @@ const authSlice = createSlice({
       };
       state.activeSiteLanguages = data.site_languages;
 
-      Storage.set("bzKey", data.key);
-      Storage.set(
+      reduxStorage.setItem("bzKey", data.key);
+      reduxStorage.setItem(
         "bzUser",
         JSON.stringify({
           is_superuser: data.user.is_superuser,
@@ -122,11 +121,15 @@ const authSlice = createSlice({
           groups: data.user.groups,
         })
       );
-      Storage.set("bzaSite", String(data.user.site));
-      localStorage.setItem(
+      reduxStorage.setItem("bzaSite", String(data.user.site));
+      reduxStorage.setItem(
         "bzSiteLanguages",
         JSON.stringify(data.site_languages)
       );
+
+      if (state.key && state.user) {
+        state.isAuthenticated = true;
+      }
     },
 
     setAuthenticated(state) {
@@ -139,7 +142,7 @@ const authSlice = createSlice({
       state.key = "";
       state.user = undefined;
       state.isAuthenticated = false;
-      Storage.clearAll();
+      // Storage.clearAll();
     },
   },
 });
